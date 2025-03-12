@@ -1,0 +1,15 @@
+mesaj = "  BTK akamedi, Python    kursu"
+
+#sonuc = mesaj.upper()
+#sonuc = mesaj.lower()
+# sonuc = mesaj.title()
+# sonuc = mesaj.capitalize()
+# sonuc = "abc".islower()
+# sonuc = "abc".isupper()
+# sonuc = mesaj.split()
+# sonuc = mesaj.split(',')
+# sonuc = mesaj.index("akamedi")
+# sonuc = mesaj.startswith("a")
+# sonuc = mesaj.endswith("u")
+sonuc = mesaj.replace("Python","Javascript")
+print(sonuc)

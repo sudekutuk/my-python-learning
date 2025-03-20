@@ -1,2 +1,2 @@
-sude su:99,99,99
-erva su:99,98,100
+sude  su:99,99,99
+erva su:76,53,100

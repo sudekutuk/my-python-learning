@@ -1,6 +1,10 @@
 from collections import defaultdict
 from scapy.all import sniff
 import time
+import logging
+
+logging.basicConfig(filename="attack_log.txt", level=logging.INFO, format="%(asctime)s - %(message)s")
+
 
 sure = 5  
 sinir_degeri = 100
@@ -8,6 +12,7 @@ paket_sayisi = 0
 starting_time = time.time()
 ip_sayac = defaultdict(int)
 protokol_sayaci = {"TCP": 0,"UDF": 0, "ICMP": 0}
+blacklist = set()
 
 
 def logla(mesaj):
@@ -17,7 +22,7 @@ def logla(mesaj):
 
 
 def paketleri_yakala(paket):
-    global paket_sayisi, starting_time,ip_sayac, protokol_sayaci
+    global paket_sayisi, starting_time,ip_sayac, protokol_sayaci,blacklist
 
    
     current_time = time.time()
@@ -33,6 +38,7 @@ def paketleri_yakala(paket):
             mesaj = print(f"Olası saldırı tespit edildi! {paket_sayisi} paket alindi. en cok trafik {en_cok_gonderilen_ip}den geldi")
             print(mesaj)
             logla(mesaj)
+            blacklist.add(en_cok_gonderilen_ip)
 
         paket_sayisi = 0
         ip_sayac.clear()
@@ -42,7 +48,12 @@ def paketleri_yakala(paket):
     paket_sayisi += 1
 
     if paket.haslayer("IP"):
-        ip_sayac[paket["IP"].src] += 1
+        src_ip = paket["IP"].src
+        ip_sayac[src_ip] += 1
+
+        if src_ip in blacklist:
+            print(f"⚠️ Şüpheli IP algılandı: {src_ip}")
+            logla(f"Şüpheli IP algılandı: {src_ip}")
 
     if paket.haslayer("TCP"):
         protokol_sayaci["TCP"] += 1
